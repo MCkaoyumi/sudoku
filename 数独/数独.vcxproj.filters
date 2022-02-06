@@ -60,5 +60,8 @@
     <Image Include="3no checked.bmp">
       <Filter>资源文件</Filter>
     </Image>
+    <Image Include="MYhead.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
 </Project>

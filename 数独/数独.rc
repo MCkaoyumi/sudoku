@@ -66,6 +66,8 @@ IDB_3CHECKED            BITMAP                  "3checked.bmp"
 
 IDB_3NOCHECKED          BITMAP                  "3no checked.bmp"
 
+IDB_HEAD                BITMAP                  "MYhead.bmp"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -79,6 +81,7 @@ BEGIN
         MENUITEM "九宫数独",                        ID_9
         MENUITEM "六宫数独",                        ID_6
         MENUITEM "四宫数独",                        ID_4
+        MENUITEM SEPARATOR
         MENUITEM "退出",                          ID_EXIT
     END
     POPUP "关于"
@@ -136,6 +139,52 @@ BEGIN
     BEGIN
         VALUE "Translation", 0x4, 1200
     END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_DLGABOUT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 258
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 141
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DLGABOUT DIALOGEX 0, 0, 265, 148
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "关于MC-烤玉米"
+FONT 12, "Microsoft Sans Serif", 400, 0, 0x0
+BEGIN
+    LTEXT           "MC-烤玉米制作\n不得盗版",IDC_STATIC,133,14,57,24
+    CONTROL         IDB_HEAD,ID_LOGO,"Static",SS_BITMAP,7,7,85,82
+    LTEXT           "SCRATCH:https://aerfaying.com/Projects/924982",IDC_STATIC,7,118,210,23
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_DLGABOUT AFX_DIALOG_LAYOUT
+BEGIN
+    0
 END
 
 #endif    // 中文(简体，中国) resources

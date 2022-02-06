@@ -157,6 +157,7 @@
     <Image Include="icon.ico" />
     <Image Include="iconsm.ico" />
     <Image Include="logo.bmp" />
+    <Image Include="MYhead.bmp" />
     <Image Include="no chicked.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

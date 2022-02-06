@@ -7,18 +7,20 @@ static TCHAR tip[] = _T("windowclass");
 bool checked1, checked2,checked3;
 bool home = true, back = false;
 HINSTANCE maininstance;
-HBITMAP logo;
-HBITMAP button1nochecked;
-HBITMAP button1checked;
-HBITMAP button2nochecked;
-HBITMAP button2checked;
-HBITMAP button3checked;
-HBITMAP button3nochecked;
-HBITMAP help;
-HWND bmphwnd;
-HWND button1wnd;
-HWND button2wnd;
-HWND button3wnd;
+HBITMAP logo, button1nochecked, button1checked, button2nochecked, button2checked, button3checked, button3nochecked, help;
+HWND bmphwnd, button1wnd, button2wnd, button3wnd;
+unsigned int mode;
+INT_PTR WINAPI dlgproc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+{
+	switch (msg)
+	{
+	case WM_CLOSE:
+		EndDialog(hwnd, 1);
+	default:
+		break;
+	}
+	return 0;
+}
 LRESULT CALLBACK wndproc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 {
 	switch (msg)
@@ -96,6 +98,33 @@ LRESULT CALLBACK wndproc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 	{
 		switch (LOWORD(wparam))
 		{
+		case ID_4:
+		{
+			mode = 4;
+			CheckMenuItem(GetMenu(hwnd), ID_4, MF_BYCOMMAND | MF_CHECKED);
+			CheckMenuItem(GetMenu(hwnd), ID_6, MF_BYCOMMAND | MF_UNCHECKED);
+			CheckMenuItem(GetMenu(hwnd), ID_9, MF_BYCOMMAND | MF_UNCHECKED);
+			break;
+		}
+		case ID_6:
+		{
+			mode = 6;
+			CheckMenuItem(GetMenu(hwnd), ID_6, MF_BYCOMMAND | MF_CHECKED);
+			CheckMenuItem(GetMenu(hwnd), ID_9, MF_BYCOMMAND | MF_UNCHECKED);
+			CheckMenuItem(GetMenu(hwnd), ID_4, MF_BYCOMMAND | MF_UNCHECKED);
+			break;
+		}
+		case ID_9:
+		{
+			mode = 9;
+			CheckMenuItem(GetMenu(hwnd), ID_9, MF_BYCOMMAND | MF_CHECKED);
+			CheckMenuItem(GetMenu(hwnd), ID_6, MF_BYCOMMAND | MF_UNCHECKED);
+			CheckMenuItem(GetMenu(hwnd), ID_4, MF_BYCOMMAND | MF_UNCHECKED);
+			break;
+		}
+		case ID_ABOUT:
+			DialogBox(maininstance, MAKEINTRESOURCE(IDD_DLGABOUT), hwnd, dlgproc);
+			break;
 		case ID_EXIT:
 			PostQuitMessage(2);
 			break;
