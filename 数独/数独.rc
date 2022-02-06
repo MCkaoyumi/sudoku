@@ -52,15 +52,19 @@ END
 
 IDB_BITMAP1             BITMAP                  "logo.bmp"
 
-IDB_1CHICKED            BITMAP                  "chicked.bmp"
+IDB_1CHECKED            BITMAP                  "chicked.bmp"
 
-IDB_1NOCHICKED          BITMAP                  "no chicked.bmp"
+IDB_1NOCHECKED          BITMAP                  "no chicked.bmp"
 
-IDB_2CHICKED            BITMAP                  "2chicked.bmp"
+IDB_2CHECKED            BITMAP                  "2chicked.bmp"
 
-IDB_2NOCHICKED          BITMAP                  "2no chicked.bmp"
+IDB_2NOCHECKED          BITMAP                  "2no chicked.bmp"
 
 IDB_HELP                BITMAP                  "help.bmp"
+
+IDB_3CHECKED            BITMAP                  "3checked.bmp"
+
+IDB_3NOCHECKED          BITMAP                  "3no checked.bmp"
 
 
 /////////////////////////////////////////////////////////////////////////////

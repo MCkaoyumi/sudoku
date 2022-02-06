@@ -150,6 +150,8 @@
   <ItemGroup>
     <Image Include="2chicked.bmp" />
     <Image Include="2no chicked.bmp" />
+    <Image Include="3checked.bmp" />
+    <Image Include="3no checked.bmp" />
     <Image Include="chicked.bmp" />
     <Image Include="help.bmp" />
     <Image Include="icon.ico" />

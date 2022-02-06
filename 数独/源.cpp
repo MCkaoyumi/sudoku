@@ -4,15 +4,16 @@
 #include<tchar.h>
 #include<CommCtrl.h>
 static TCHAR tip[] = _T("windowclass");
-bool chicked1, chicked2;
+bool checked1, checked2,checked3;
+bool home = true, back = false;
 HINSTANCE maininstance;
 HBITMAP logo;
-HBITMAP button1nochicked;
-HBITMAP button1chicked;
-HBITMAP button2nochicked;
-HBITMAP button2chicked;
-HBITMAP button3chicked;
-HBITMAP button3nochicked;
+HBITMAP button1nochecked;
+HBITMAP button1checked;
+HBITMAP button2nochecked;
+HBITMAP button2checked;
+HBITMAP button3checked;
+HBITMAP button3nochecked;
 HBITMAP help;
 HWND bmphwnd;
 HWND button1wnd;
@@ -24,11 +25,27 @@ LRESULT CALLBACK wndproc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 	{
 	case WM_LBUTTONDOWN:
 	{
-		if (chicked2)
+		if (checked2)
 		{
 			SendMessage(bmphwnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)help);
 			ShowWindow(button1wnd, SW_HIDE);
 			ShowWindow(button2wnd, SW_HIDE);
+			ShowWindow(button3wnd, SW_SHOW);
+			home = false;
+			back = true;
+			checked2 = false;
+			break;
+		}
+		if (checked3)
+		{
+			SendMessage(bmphwnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)logo);
+			ShowWindow(button1wnd, SW_SHOW);
+			ShowWindow(button2wnd, SW_SHOW);
+			ShowWindow(button3wnd, SW_HIDE);
+			home = true;
+			back = false;
+			checked3 = false;
+			break;
 		}
 		break;
 	}
@@ -37,25 +54,41 @@ LRESULT CALLBACK wndproc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 		int xpos, ypos;
 		xpos = GET_X_LPARAM(lparam);
 		ypos = GET_Y_LPARAM(lparam);
-		if ((xpos < 324 && xpos>160) && (ypos > 100 && ypos < 184))
+		if(home)
 		{
-			SendMessage(button1wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button1chicked);
-			chicked1 = true;
+			if ((xpos < 324 && xpos>160) && (ypos > 100 && ypos < 184))
+			{
+				SendMessage(button1wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button1checked);
+				checked1 = true;
+			}
+			else
+			{ 
+				SendMessage(button1wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button1nochecked);
+				checked1 = false;
+			}	
+			if ((xpos < 324 && xpos>160) && (ypos > 200 && ypos < 284))
+			{
+				SendMessage(button2wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button2checked);
+				checked2 = true;
+			}
+			else
+			{
+				SendMessage(button2wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button2nochecked);
+				checked2 = false;
+			} 
 		}
-		else
-		{ 
-			SendMessage(button1wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button1nochicked);
-			chicked1 = false;
-		}	
-		if ((xpos < 324 && xpos>160) && (ypos > 200 && ypos < 284))
+		if (back)
 		{
-			SendMessage(button2wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button2chicked);
-			chicked2 = true;
-		}
-		else
-		{
-			SendMessage(button2wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button2nochicked);
-			chicked2 = false;
+			if ((xpos < 324 && xpos>160) && (ypos > 270 && ypos < 354))
+			{
+				SendMessage(button3wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button3checked);
+				checked3 = true;
+			}
+			else
+			{
+				SendMessage(button3wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button3nochecked);
+				checked3 = false;
+			}
 		}
 		break;
 	}
@@ -101,18 +134,21 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR ncmdline,
 	HWND windowwnd=CreateWindow(tip, _T("Êý¶À"), WS_CAPTION | WS_POPUPWINDOW | WS_MINIMIZEBOX, 500, 300, 500, 500, NULL, NULL, hInstance, NULL);
 	SetWindowPos(windowwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
 	logo = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_BITMAP1));
-	button1nochicked = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_1NOCHICKED));
-	button1chicked = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_1CHICKED));
-	button2chicked= LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_2CHICKED));
-	button2nochicked= LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_2NOCHICKED));
+	button1nochecked = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_1NOCHECKED));
+	button1checked = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_1CHECKED));
+	button2checked= LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_2CHECKED));
+	button2nochecked= LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_2NOCHECKED));
+	button3checked = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_3CHECKED));
+	button3nochecked = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_3NOCHECKED));
 	help = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_HELP));
 	bmphwnd = CreateWindow(WC_STATIC, NULL, SS_BITMAP | SS_CENTERIMAGE | WS_CHILD | WS_VISIBLE, 0, 0, 500, 500, windowwnd, NULL, hInstance, NULL);
 	button1wnd = CreateWindow(WC_STATIC, NULL, SS_BITMAP | SS_CENTERIMAGE | WS_CHILD | WS_VISIBLE, 160, 100, 164, 84, windowwnd, NULL, hInstance, NULL);
 	button2wnd = CreateWindow(WC_STATIC, NULL, SS_BITMAP | SS_CENTERIMAGE | WS_CHILD | WS_VISIBLE, 160, 200, 164, 84, windowwnd, NULL, hInstance, NULL);
-	button3wnd = CreateWindow(WC_STATIC, NULL, SS_BITMAP | SS_CENTERIMAGE | WS_CHILD, 160, 250, 164, 84, windowwnd, NULL, hInstance, NULL);
+	button3wnd = CreateWindow(WC_STATIC, NULL, SS_BITMAP | SS_CENTERIMAGE | WS_CHILD, 160, 270, 164, 84, windowwnd, NULL, hInstance, NULL);
 	SendMessage(bmphwnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)logo);
-	SendMessage(button1wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button1nochicked);
-	SendMessage(button2wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button2nochicked);
+	SendMessage(button1wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button1nochecked);
+	SendMessage(button2wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button2nochecked);
+	SendMessage(button3wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button3nochecked);
 	MSG msg = { 0 };
 	while (GetMessage(&msg, NULL, 0, 0))
 	{
