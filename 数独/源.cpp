@@ -2,29 +2,73 @@
 #include<Windows.h>
 #include<windowsx.h>
 #include<tchar.h>
+#include<CommCtrl.h>
 static TCHAR tip[] = _T("windowclass");
+bool chicked1, chicked2;
 HINSTANCE maininstance;
 HBITMAP logo;
 HBITMAP button1nochicked;
 HBITMAP button1chicked;
 HBITMAP button2nochicked;
 HBITMAP button2chicked;
+HBITMAP button3chicked;
+HBITMAP button3nochicked;
+HBITMAP help;
 HWND bmphwnd;
 HWND button1wnd;
 HWND button2wnd;
+HWND button3wnd;
 LRESULT CALLBACK wndproc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 {
 	switch (msg)
 	{
+	case WM_LBUTTONDOWN:
+	{
+		if (chicked2)
+		{
+			SendMessage(bmphwnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)help);
+			ShowWindow(button1wnd, SW_HIDE);
+			ShowWindow(button2wnd, SW_HIDE);
+		}
+		break;
+	}
 	case WM_MOUSEMOVE:
 	{
 		int xpos, ypos;
 		xpos = GET_X_LPARAM(lparam);
 		ypos = GET_Y_LPARAM(lparam);
-		if ((xpos < 324 && xpos>160) && (ypos > 100 && ypos < 190))
+		if ((xpos < 324 && xpos>160) && (ypos > 100 && ypos < 184))
+		{
 			SendMessage(button1wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button1chicked);
+			chicked1 = true;
+		}
 		else
+		{ 
 			SendMessage(button1wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button1nochicked);
+			chicked1 = false;
+		}	
+		if ((xpos < 324 && xpos>160) && (ypos > 200 && ypos < 284))
+		{
+			SendMessage(button2wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button2chicked);
+			chicked2 = true;
+		}
+		else
+		{
+			SendMessage(button2wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button2nochicked);
+			chicked2 = false;
+		}
+		break;
+	}
+	case WM_COMMAND:
+	{
+		switch (LOWORD(wparam))
+		{
+		case ID_EXIT:
+			PostQuitMessage(2);
+			break;
+		default:
+			break;
+		}
 		break;
 	}
 	case WM_CLOSE:
@@ -54,16 +98,21 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR ncmdline,
 		MessageBox(NULL, _T("×¢²á´°¿ÚÀàÊ§°Ü"), _T("Êý¶À"), MB_OK | MB_ICONERROR);
 		return -1;
 	}
-	HWND windowwnd=CreateWindow(tip, _T("Êý¶À"), WS_CAPTION | WS_POPUPWINDOW, 500, 300, 500, 500, NULL, NULL, hInstance, NULL);
-	SetWindowPos(windowwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
-	ShowWindow(windowwnd, SW_SHOW);
-	logo = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_BITMAP1));
-	button1nochicked = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_1NOCHICKED));
-	button1chicked = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_1CHICKED));
-	bmphwnd = CreateWindow(TEXT("STATIC"), NULL, SS_BITMAP | SS_CENTERIMAGE | WS_CHILD | WS_VISIBLE, 0, 0, 500, 500, windowwnd, NULL, (HINSTANCE)GetWindowLongPtr(windowwnd, GWLP_HINSTANCE), NULL);
-	button1wnd = CreateWindow(_T("STATIC"), NULL, SS_BITMAP | SS_CENTERIMAGE | WS_CHILD | WS_VISIBLE, 160, 100, 164, 84, windowwnd, NULL, (HINSTANCE)GetWindowLongPtr(windowwnd, GWLP_HINSTANCE), NULL);
+	HWND windowwnd=CreateWindow(tip, _T("Êý¶À"), WS_CAPTION | WS_POPUPWINDOW | WS_MINIMIZEBOX, 500, 300, 500, 500, NULL, NULL, hInstance, NULL);
+	SetWindowPos(windowwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+	logo = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_BITMAP1));
+	button1nochicked = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_1NOCHICKED));
+	button1chicked = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_1CHICKED));
+	button2chicked= LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_2CHICKED));
+	button2nochicked= LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_2NOCHICKED));
+	help = LoadBitmap(hInstance, MAKEINTRESOURCE(IDB_HELP));
+	bmphwnd = CreateWindow(WC_STATIC, NULL, SS_BITMAP | SS_CENTERIMAGE | WS_CHILD | WS_VISIBLE, 0, 0, 500, 500, windowwnd, NULL, hInstance, NULL);
+	button1wnd = CreateWindow(WC_STATIC, NULL, SS_BITMAP | SS_CENTERIMAGE | WS_CHILD | WS_VISIBLE, 160, 100, 164, 84, windowwnd, NULL, hInstance, NULL);
+	button2wnd = CreateWindow(WC_STATIC, NULL, SS_BITMAP | SS_CENTERIMAGE | WS_CHILD | WS_VISIBLE, 160, 200, 164, 84, windowwnd, NULL, hInstance, NULL);
+	button3wnd = CreateWindow(WC_STATIC, NULL, SS_BITMAP | SS_CENTERIMAGE | WS_CHILD, 160, 250, 164, 84, windowwnd, NULL, hInstance, NULL);
 	SendMessage(bmphwnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)logo);
 	SendMessage(button1wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button1nochicked);
+	SendMessage(button2wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button2nochicked);
 	MSG msg = { 0 };
 	while (GetMessage(&msg, NULL, 0, 0))
 	{

@@ -56,6 +56,12 @@ IDB_1CHICKED            BITMAP                  "chicked.bmp"
 
 IDB_1NOCHICKED          BITMAP                  "no chicked.bmp"
 
+IDB_2CHICKED            BITMAP                  "2chicked.bmp"
+
+IDB_2NOCHICKED          BITMAP                  "2no chicked.bmp"
+
+IDB_HELP                BITMAP                  "help.bmp"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -88,6 +94,45 @@ END
 IDI_ICON1               ICON                    "icon.ico"
 
 IDI_ICON2               ICON                    "iconsm.ico"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "000404b0"
+        BEGIN
+            VALUE "CompanyName", "MC-烤玉米"
+            VALUE "FileDescription", "数独"
+            VALUE "FileVersion", "1.0.0.1"
+            VALUE "InternalName", "数独.exe"
+            VALUE "LegalCopyright", "https://aerfaying.com/Projects/924982(禁止抄袭)"
+            VALUE "OriginalFilename", "数独.sb3"
+            VALUE "ProductName", "数独"
+            VALUE "ProductVersion", "1.0.0.1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x4, 1200
+    END
+END
 
 #endif    // 中文(简体，中国) resources
 /////////////////////////////////////////////////////////////////////////////
