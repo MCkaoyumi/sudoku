@@ -20,9 +20,12 @@
 #define IDB_3NOCHECKED                  116
 #define IDD_DLGABOUT                    117
 #define IDB_HEAD                        119
-#define ID_LOGO                         1002
-#define IDC_EDIT1                       1010
-#define IDC_EDIT                        1010
+#define IDB_4CHICKED                    121
+#define IDB_4NOCHICKED                  122
+#define IDB_5CHICKED                    123
+#define IDB_5NOCHICKED                  124
+#define IDB_BITMAP3                     125
+#define IDB_WHICH                       125
 #define ID_9                            40006
 #define ID_6                            40007
 #define ID_4                            40008
@@ -34,7 +37,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        121
+#define _APS_NEXT_RESOURCE_VALUE        126
 #define _APS_NEXT_COMMAND_VALUE         40011
 #define _APS_NEXT_CONTROL_VALUE         1011
 #define _APS_NEXT_SYMED_VALUE           101

@@ -75,6 +75,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <LinkKeyFile>
+    </LinkKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -108,7 +110,14 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <Driver>NotSet</Driver>
+      <MinimumRequiredVersion>
+      </MinimumRequiredVersion>
+      <ShowProgress>NotSet</ShowProgress>
     </Link>
+    <Manifest>
+      <EnableDpiAwareness>true</EnableDpiAwareness>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -152,6 +161,10 @@
     <Image Include="2no chicked.bmp" />
     <Image Include="3checked.bmp" />
     <Image Include="3no checked.bmp" />
+    <Image Include="4chicked.bmp" />
+    <Image Include="4no chkicked.bmp" />
+    <Image Include="5chicked.bmp" />
+    <Image Include="5no chicked.bmp" />
     <Image Include="chicked.bmp" />
     <Image Include="help.bmp" />
     <Image Include="icon.ico" />
@@ -159,6 +172,7 @@
     <Image Include="logo.bmp" />
     <Image Include="MYhead.bmp" />
     <Image Include="no chicked.bmp" />
+    <Image Include="which.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -63,5 +63,20 @@
     <Image Include="MYhead.bmp">
       <Filter>资源文件</Filter>
     </Image>
+    <Image Include="4chicked.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="4no chkicked.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="5chicked.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="5no chicked.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="which.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
 </Project>
