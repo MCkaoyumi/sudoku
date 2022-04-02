@@ -116,7 +116,7 @@
       <ShowProgress>NotSet</ShowProgress>
     </Link>
     <Manifest>
-      <EnableDpiAwareness>true</EnableDpiAwareness>
+      <EnableDpiAwareness>false</EnableDpiAwareness>
     </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -170,9 +170,16 @@
     <Image Include="icon.ico" />
     <Image Include="iconsm.ico" />
     <Image Include="logo.bmp" />
+    <Image Include="menuchecked.bmp" />
     <Image Include="MYhead.bmp" />
     <Image Include="no chicked.bmp" />
+    <Image Include="sudoku4.bmp" />
+    <Image Include="sudoku6.bmp" />
+    <Image Include="sudoku9.bmp" />
     <Image Include="which.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="啵.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

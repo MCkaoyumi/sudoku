@@ -78,5 +78,22 @@
     <Image Include="which.bmp">
       <Filter>资源文件</Filter>
     </Image>
+    <Image Include="sudoku9.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="sudoku6.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="sudoku4.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="menuchecked.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="啵.wav">
+      <Filter>资源文件</Filter>
+    </Media>
   </ItemGroup>
 </Project>
