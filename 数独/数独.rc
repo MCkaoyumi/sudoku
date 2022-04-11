@@ -96,6 +96,7 @@ IDR_MENU1 MENU
 BEGIN
     POPUP "主程序"
     BEGIN
+        MENUITEM "置顶窗口",                        ID_TOPMOST
         POPUP "隐藏"
         BEGIN
             MENUITEM "隐藏至托盘",                       ID_SOONHIDE

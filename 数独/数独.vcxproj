@@ -154,7 +154,7 @@
     <ResourceCompile Include="数独.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="源.cpp" />
+    <ClCompile Include="MainAPP.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="2chicked.bmp" />

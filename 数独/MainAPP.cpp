@@ -5,18 +5,85 @@
 #include<CommCtrl.h>
 #include<iostream>
 #include<thread>
-#include "mmsystem.h"
+#include<mmsystem.h>
 #include<thread>
 #pragma comment(lib, "winmm.lib")
 #define IDR_MAINFRAME 2021
 #define WM_TO_TRAY 114514
 static TCHAR tip[] = _T("windowclass");
 bool checked1, checked2,checked3,checked4,checked5;
-bool home = true, back1 = false, back2 = false, start = false, minizehide = false, windowhide = false, destroyicon = false;
+bool home = true, back1 = false, back2 = false, start = false, minizehide = false, windowhide = false, destroyicon = false,topmost=true;
 HINSTANCE maininstance;
 HBITMAP logo, button1nochecked, button1checked, button2nochecked, button2checked, button3checked, button3nochecked,button4nochecked, button4checked, button5checked, button5nochecked, help,which,sudokumenu9, sudokumenu6, sudokumenu4, sudokumenuchecked;
 HWND bmphwnd, button1wnd, button2wnd, button3wnd,button4wnd,button5wnd,windowwnd;
 unsigned int mode;
+HBITMAP png;
+void InitWindow(HWND hwnd)
+{
+	which = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_WHICH));
+	logo = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_BITMAP1));
+	button1nochecked = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_1NOCHECKED));
+	button1checked = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_1CHECKED));
+	button2checked = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_2CHECKED));
+	button2nochecked = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_2NOCHECKED));
+	button3checked = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_3CHECKED));
+	button3nochecked = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_3NOCHECKED));
+	button4checked = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_4CHICKED));
+	button4nochecked = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_4NOCHICKED));
+	button5checked = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_5CHICKED));
+	button5nochecked = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_5NOCHICKED));
+	help = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_HELP));
+	bmphwnd = CreateWindow(WC_STATIC, NULL, SS_BITMAP | SS_CENTERIMAGE | WS_CHILD | WS_VISIBLE, 0, 0, 500, 500, hwnd, NULL, maininstance, NULL);
+	button1wnd = CreateWindow(WC_STATIC, NULL, SS_BITMAP | SS_CENTERIMAGE | WS_CHILD | WS_VISIBLE, 160, 100, 164, 84, hwnd, NULL, maininstance, NULL);
+	button2wnd = CreateWindow(WC_STATIC, NULL, SS_BITMAP | SS_CENTERIMAGE | WS_CHILD | WS_VISIBLE, 160, 200, 164, 84, hwnd, NULL, maininstance, NULL);
+	button3wnd = CreateWindow(WC_STATIC, NULL, SS_BITMAP | SS_CENTERIMAGE | WS_CHILD, 160, 270, 164, 84, hwnd, NULL, maininstance, NULL);
+	button4wnd = CreateWindow(WC_STATIC, NULL, SS_BITMAP | SS_CENTERIMAGE | WS_CHILD, 50, 120, 164, 84, hwnd, NULL, maininstance, NULL);
+	button5wnd = CreateWindow(WC_STATIC, NULL, SS_BITMAP | SS_CENTERIMAGE | WS_CHILD, 250, 120, 164, 84, hwnd, NULL, maininstance, NULL);
+	SendMessage(bmphwnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)logo);
+	SendMessage(button1wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button1nochecked);
+	SendMessage(button2wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button2nochecked);
+	SendMessage(button3wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button3nochecked);
+	SendMessage(button4wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button4nochecked);
+	SendMessage(button5wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button5nochecked);
+	sudokumenuchecked = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_MENUCHECKED));
+	sudokumenu9 = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_9));
+	sudokumenu6 = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_6));
+	sudokumenu4 = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_4));
+	SetMenuItemBitmaps(GetMenu(hwnd), ID_9, MF_BYCOMMAND, sudokumenu9, sudokumenuchecked);
+	SetMenuItemBitmaps(GetMenu(hwnd), ID_6, MF_BYCOMMAND, sudokumenu6, sudokumenuchecked);
+	SetMenuItemBitmaps(GetMenu(hwnd), ID_4, MF_BYCOMMAND, sudokumenu4, sudokumenuchecked);
+	CheckMenuItem(GetMenu(hwnd), ID_TOPMOST, MF_BYCOMMAND | MF_CHECKED);
+	SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+	DrawMenuBar(hwnd);
+}
+void DeleteBitmaps(void)
+{
+	DeleteBitmap(logo);
+	DeleteBitmap(button1nochecked);
+	DeleteBitmap(button1checked);
+	DeleteBitmap(button2nochecked);
+	DeleteBitmap(button2checked);
+	DeleteBitmap(button3checked);
+	DeleteBitmap(button3nochecked);
+	DeleteBitmap(button4nochecked);
+	DeleteBitmap(button4checked);
+	DeleteBitmap(button5checked);
+	DeleteBitmap(button5nochecked);
+	DeleteBitmap(help);
+	DeleteBitmap(which);
+	DeleteBitmap(sudokumenu9);
+	DeleteBitmap(sudokumenu6);
+	DeleteBitmap(sudokumenu4);
+	DeleteBitmap(sudokumenuchecked);
+}
+bool clcchecked(HWND HButton)
+{
+	POINT Mousepos;
+	GetCursorPos(&Mousepos);
+	RECT rect;
+	GetWindowRect(HButton, &rect);
+	return Mousepos.x > rect.left && Mousepos.x<rect.right&& Mousepos.y>rect.top && Mousepos.y < rect.bottom ? true : false;
+}
 void showicon(HWND hwnd)
 {
 	NOTIFYICONDATA nid;
@@ -62,7 +129,8 @@ LRESULT CALLBACK wndproc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 		if (windowhide && lparam == WM_LBUTTONDOWN)
 		{
 			windowhide = false;
-			SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+			if(topmost)
+				SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 			ShowWindow(hwnd, SW_RESTORE);
 			if (destroyicon && !minizehide)
 			{
@@ -86,7 +154,8 @@ LRESULT CALLBACK wndproc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 			if (xx == ID_SHOW)
 			{
 				windowhide = false;
-				SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+				if(topmost)
+					SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 				ShowWindow(hwnd, SW_RESTORE);
 				if (destroyicon && !minizehide)
 				{
@@ -96,23 +165,7 @@ LRESULT CALLBACK wndproc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 			}
 			if (xx == ID_CLCEXIT)
 			{
-				DeleteBitmap(logo);
-				DeleteBitmap(button1nochecked);
-				DeleteBitmap(button1checked);
-				DeleteBitmap(button2nochecked);
-				DeleteBitmap(button2checked);
-				DeleteBitmap(button3checked);
-				DeleteBitmap(button3nochecked);
-				DeleteBitmap(button4nochecked);
-				DeleteBitmap(button4checked);
-				DeleteBitmap(button5checked);
-				DeleteBitmap(button5nochecked);
-				DeleteBitmap(help);
-				DeleteBitmap(which);
-				DeleteBitmap(sudokumenu9);
-				DeleteBitmap(sudokumenu6);
-				DeleteBitmap(sudokumenu4);
-				DeleteBitmap(sudokumenuchecked);
+				DeleteBitmaps();
 				deleteicon(hwnd);
 				PostQuitMessage(3);
 			}
@@ -126,40 +179,7 @@ LRESULT CALLBACK wndproc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 		}
 		break;
 	case WM_CREATE:
-		SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
-		which = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_WHICH));
-		logo = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_BITMAP1));
-		button1nochecked = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_1NOCHECKED));
-		button1checked = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_1CHECKED));
-		button2checked = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_2CHECKED));
-		button2nochecked = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_2NOCHECKED));
-		button3checked = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_3CHECKED));
-		button3nochecked = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_3NOCHECKED));
-		button4checked = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_4CHICKED));
-		button4nochecked = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_4NOCHICKED));
-		button5checked = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_5CHICKED));
-		button5nochecked = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_5NOCHICKED));
-		help = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_HELP));
-		bmphwnd = CreateWindow(WC_STATIC, NULL, SS_BITMAP | SS_CENTERIMAGE | WS_CHILD | WS_VISIBLE, 0, 0, 500, 500, hwnd, NULL, maininstance, NULL);
-		button1wnd = CreateWindow(WC_STATIC, NULL, SS_BITMAP | SS_CENTERIMAGE | WS_CHILD | WS_VISIBLE, 160, 100, 164, 84, hwnd, NULL, maininstance, NULL);
-		button2wnd = CreateWindow(WC_STATIC, NULL, SS_BITMAP | SS_CENTERIMAGE | WS_CHILD | WS_VISIBLE, 160, 200, 164, 84, hwnd, NULL, maininstance, NULL);
-		button3wnd = CreateWindow(WC_STATIC, NULL, SS_BITMAP | SS_CENTERIMAGE | WS_CHILD, 160, 270, 164, 84, hwnd, NULL, maininstance, NULL);
-		button4wnd = CreateWindow(WC_STATIC, NULL, SS_BITMAP | SS_CENTERIMAGE | WS_CHILD, 50, 120, 164, 84, hwnd, NULL, maininstance, NULL);
-		button5wnd = CreateWindow(WC_STATIC, NULL, SS_BITMAP | SS_CENTERIMAGE | WS_CHILD, 250, 120, 164, 84, hwnd, NULL, maininstance, NULL);
-		SendMessage(bmphwnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)logo);
-		SendMessage(button1wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button1nochecked);
-		SendMessage(button2wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button2nochecked);
-		SendMessage(button3wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button3nochecked);
-		SendMessage(button4wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button4nochecked);
-		SendMessage(button5wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button5nochecked);
-		sudokumenuchecked = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_MENUCHECKED));
-		sudokumenu9 = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_9));
-		sudokumenu6 = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_6));
-		sudokumenu4 = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_4));
-		SetMenuItemBitmaps(GetMenu(hwnd), ID_9, MF_BYCOMMAND, sudokumenu9, sudokumenuchecked);
-		SetMenuItemBitmaps(GetMenu(hwnd), ID_6, MF_BYCOMMAND, sudokumenu6, sudokumenuchecked);
-		SetMenuItemBitmaps(GetMenu(hwnd), ID_4, MF_BYCOMMAND, sudokumenu4, sudokumenuchecked);
-		DrawMenuBar(hwnd);
+		InitWindow(hwnd);
 		break;
 	case WM_LBUTTONDOWN:
 	{
@@ -201,12 +221,9 @@ LRESULT CALLBACK wndproc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 	}
 	case WM_MOUSEMOVE:
 	{
-		int xpos, ypos;
-		xpos = GET_X_LPARAM(lparam);
-		ypos = GET_Y_LPARAM(lparam);
 		if(home)
 		{
-			if ((xpos < 324 && xpos>160) && (ypos > 100 && ypos < 184))
+			if (clcchecked(button1wnd))
 			{
 				SendMessage(button1wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button1checked);
 				if (!checked1)
@@ -218,7 +235,7 @@ LRESULT CALLBACK wndproc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 				SendMessage(button1wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button1nochecked);
 				checked1 = false;
 			}	
-			if ((xpos < 324 && xpos>160) && (ypos > 200 && ypos < 284))
+			if (clcchecked(button2wnd))
 			{
 				SendMessage(button2wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button2checked);
 				if (!checked2)
@@ -233,7 +250,7 @@ LRESULT CALLBACK wndproc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 		}
 		if (back1)
 		{
-			if ((xpos < 324 && xpos>160) && (ypos > 270 && ypos < 354))
+			if (clcchecked(button3wnd))
 			{
 				SendMessage(button3wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button3checked);
 				if (!checked3)
@@ -248,7 +265,7 @@ LRESULT CALLBACK wndproc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 		}
 		if (back2)
 		{
-			if ((xpos < 214 && xpos>50) && (ypos > 120 && ypos < 204))
+			if (clcchecked(button4wnd))
 			{
 				SendMessage(button4wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button4checked);
 				if (!checked4)
@@ -260,7 +277,7 @@ LRESULT CALLBACK wndproc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 				SendMessage(button4wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button4nochecked);
 				checked4 = false;
 			}
-			if ((xpos < 414 && xpos>250) && (ypos > 120 && ypos < 204))
+			if (clcchecked(button5wnd))
 			{
 				SendMessage(button5wnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)button5checked);
 				if (!checked5)
@@ -279,6 +296,20 @@ LRESULT CALLBACK wndproc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 	{
 		switch (LOWORD(wparam))
 		{
+		case ID_TOPMOST:
+			if (CheckMenuItem(GetMenu(hwnd), ID_TOPMOST, MF_BYCOMMAND) == MF_CHECKED)
+			{
+				CheckMenuItem(GetMenu(hwnd), ID_TOPMOST, MF_BYCOMMAND | MF_UNCHECKED);
+				SetWindowPos(hwnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+				topmost = false;
+			}
+			else
+			{
+				CheckMenuItem(GetMenu(hwnd), ID_TOPMOST, MF_BYCOMMAND | MF_CHECKED);
+				SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+				topmost = true;
+			}
+			break;
 		case ID_SOONHIDE:
 			showicon(hwnd);
 			windowhide = true;
@@ -321,23 +352,7 @@ LRESULT CALLBACK wndproc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 			DialogBox(maininstance, MAKEINTRESOURCE(IDD_DLGABOUT), hwnd, dlgproc);
 			break;
 		case ID_EXIT:
-			DeleteBitmap(logo);
-			DeleteBitmap(button1nochecked);
-			DeleteBitmap(button1checked);
-			DeleteBitmap(button2nochecked);
-			DeleteBitmap(button2checked);
-			DeleteBitmap(button3checked);
-			DeleteBitmap(button3nochecked);
-			DeleteBitmap(button4nochecked);
-			DeleteBitmap(button4checked);
-			DeleteBitmap(button5checked);
-			DeleteBitmap(button5nochecked);
-			DeleteBitmap(help);
-			DeleteBitmap(which);
-			DeleteBitmap(sudokumenu9);
-			DeleteBitmap(sudokumenu6);
-			DeleteBitmap(sudokumenu4);
-			DeleteBitmap(sudokumenuchecked);
+			DeleteBitmaps();
 			deleteicon(hwnd);
 			PostQuitMessage(2);
 			break;
@@ -350,23 +365,7 @@ LRESULT CALLBACK wndproc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 	{
 		if (MessageBox(hwnd, _T("ÊÇ·ñ¹Ø±Õ"), _T("Êý¶À"), MB_YESNO | MB_ICONINFORMATION | MB_DEFBUTTON2) == 6)
 		{
-			DeleteBitmap(logo);
-			DeleteBitmap(button1nochecked);
-			DeleteBitmap(button1checked);
-			DeleteBitmap(button2nochecked);
-			DeleteBitmap(button2checked);
-			DeleteBitmap(button3checked);
-			DeleteBitmap(button3nochecked);
-			DeleteBitmap(button4nochecked);
-			DeleteBitmap(button4checked);
-			DeleteBitmap(button5checked);
-			DeleteBitmap(button5nochecked);
-			DeleteBitmap(help);
-			DeleteBitmap(which);
-			DeleteBitmap(sudokumenu9);
-			DeleteBitmap(sudokumenu6);
-			DeleteBitmap(sudokumenu4);
-			DeleteBitmap(sudokumenuchecked);
+			DeleteBitmaps();
 			deleteicon(hwnd);
 			PostQuitMessage(1);
 		}
@@ -399,6 +398,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR ncmdline,
 	{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
+		
 	}
 
 }

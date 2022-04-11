@@ -37,14 +37,23 @@
 #define ID_HIDE                         40013
 #define ID_40014                        40014
 #define ID_SOONHIDE                     40015
+#define ID_40019                        40019
+#define ID_40020                        40020
+#define ID_1_2                          40021
+#define ID_2_3                          40022
+#define ID_3_4                          40023
+#define ID_4_5                          40024
+#define ID_4_6                          40025
+#define ID_4_7                          40026
+#define ID_TOPMOST                      40027
 #define IDC_STATIC                      -1
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        133
-#define _APS_NEXT_COMMAND_VALUE         40019
+#define _APS_NEXT_RESOURCE_VALUE        135
+#define _APS_NEXT_COMMAND_VALUE         40031
 #define _APS_NEXT_CONTROL_VALUE         1011
 #define _APS_NEXT_SYMED_VALUE           104
 #endif
