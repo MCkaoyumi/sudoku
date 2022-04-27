@@ -149,6 +149,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
+    <ClInclude Include="sudoku.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="数独.rc" />
@@ -168,7 +169,6 @@
     <Image Include="chicked.bmp" />
     <Image Include="help.bmp" />
     <Image Include="icon.ico" />
-    <Image Include="iconsm.ico" />
     <Image Include="logo.bmp" />
     <Image Include="menuchecked.bmp" />
     <Image Include="MYhead.bmp" />
