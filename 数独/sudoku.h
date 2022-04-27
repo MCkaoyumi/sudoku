@@ -30,9 +30,9 @@ public:
 		CLCBitmap = LoadBitmap(hInstance, MAKEINTRESOURCE(CLCBitmapID));
 		UNCLCBitmap = LoadBitmap(hInstance, MAKEINTRESOURCE(UNCLCBitmapID));
 		BTNWND = CreateWindow(WC_STATIC, NULL, SS_BITMAP | WS_CHILD , x, y, NULL, NULL, hwnd, NULL, hInstance, NULL);
+		SendMessage(BTNWND, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)UNCLCBitmap);
 		if (SHOW)
 			ShowWindow(BTNWND, SW_SHOW);
-		SendMessage(BTNWND, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)UNCLCBitmap);
 	}
 	~BITMAPBUTTON()
 	{
@@ -75,4 +75,27 @@ public:
 		Show = true;
 		CLC = false;
 	}
+};
+class ICON
+{
+public:
+	HICON icon;
+	ICON(HWND hwnd, HICON icon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON1)))
+	{
+		this->icon = icon;
+		nid.cbSize = (DWORD)sizeof(NOTIFYICONDATA);
+		nid.hWnd = hwnd;
+		nid.uID = IDR_MAINFRAME;
+		nid.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
+		nid.uCallbackMessage = WM_TO_TRAY;
+		nid.hIcon = icon;
+		wcscpy_s(nid.szTip, _T("Êý¶À"));
+		Shell_NotifyIcon(NIM_ADD, &nid);
+	}
+	~ICON()
+	{
+		Shell_NotifyIcon(NIM_DELETE, &nid);
+	}
+private:
+	NOTIFYICONDATA nid;
 };

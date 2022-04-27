@@ -6,15 +6,11 @@ HINSTANCE maininstance;
 HBITMAP logo, helpb, which, sudokumenu9, sudokumenu6, sudokumenu4, sudokumenuchecked;
 HWND bmphwnd, windowwnd;
 BITMAPBUTTON* play, * help, * backstart, * player, * count;
+ICON* icon;
 unsigned int mode;
 HBITMAP png;
 void InitWindow(HWND hwnd)
 {
-	play = new BITMAPBUTTON(160, 100, IDB_1CHECKED, IDB_1NOCHECKED, hwnd, maininstance, true);
-	help = new BITMAPBUTTON(160, 200, IDB_2CHECKED, IDB_2NOCHECKED, hwnd, maininstance, true);
-	backstart = new BITMAPBUTTON(160, 270, IDB_3CHECKED, IDB_3NOCHECKED, hwnd, maininstance, false);
-	player = new BITMAPBUTTON(50, 120, IDB_4CHICKED, IDB_4NOCHICKED, hwnd, maininstance, false);
-	count = new BITMAPBUTTON(250, 120, IDB_5CHICKED, IDB_5NOCHICKED, hwnd, maininstance, false);
 	which = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_WHICH));
 	logo = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_BITMAP1));
 	helpb = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_HELP));
@@ -30,14 +26,20 @@ void InitWindow(HWND hwnd)
 	CheckMenuItem(GetMenu(hwnd), ID_TOPMOST, MF_BYCOMMAND | MF_CHECKED);
 	SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
 	DrawMenuBar(hwnd);
+	play = new BITMAPBUTTON(160, 100, IDB_1CHECKED, IDB_1NOCHECKED, hwnd, maininstance, true);
+	help = new BITMAPBUTTON(160, 200, IDB_2CHECKED, IDB_2NOCHECKED, hwnd, maininstance, true);
+	backstart = new BITMAPBUTTON(160, 270, IDB_3CHECKED, IDB_3NOCHECKED, hwnd, maininstance, false);
+	player = new BITMAPBUTTON(50, 120, IDB_4CHICKED, IDB_4NOCHICKED, hwnd, maininstance, false);
+	count = new BITMAPBUTTON(250, 120, IDB_5CHICKED, IDB_5NOCHICKED, hwnd, maininstance, false);
 }
-void DeleteBitmaps(void)
+void DeleteResource(void)
 {
 	delete play;
 	delete help;
 	delete backstart;
 	delete player;
 	delete count;
+	delete icon;
 	DeleteBitmap(logo);
 	DeleteBitmap(help);
 	DeleteBitmap(which);
@@ -45,38 +47,6 @@ void DeleteBitmaps(void)
 	DeleteBitmap(sudokumenu6);
 	DeleteBitmap(sudokumenu4);
 	DeleteBitmap(sudokumenuchecked);
-}
-bool clcchecked(HWND HButton)
-{
-	POINT Mousepos;
-	GetCursorPos(&Mousepos);
-	RECT rect;
-	GetWindowRect(HButton, &rect);
-	return Mousepos.x > rect.left && Mousepos.x<rect.right&& Mousepos.y>rect.top && Mousepos.y < rect.bottom ? true : false;
-}
-void showicon(HWND hwnd)
-{
-	NOTIFYICONDATA nid;
-	nid.cbSize = (DWORD)sizeof(NOTIFYICONDATA);
-	nid.hWnd = hwnd;
-	nid.uID = IDR_MAINFRAME;
-	nid.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
-	nid.uCallbackMessage = WM_TO_TRAY;
-	nid.hIcon = LoadIcon(maininstance, MAKEINTRESOURCE(IDI_ICON1));
-	wcscpy_s(nid.szTip, _T("数独"));
-	Shell_NotifyIcon(NIM_ADD, &nid);
-}
-void deleteicon(HWND hwnd)
-{
-	NOTIFYICONDATA nid;
-	nid.cbSize = (DWORD)sizeof(NOTIFYICONDATA);
-	nid.hWnd = hwnd;
-	nid.uID = IDR_MAINFRAME;
-	nid.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
-	nid.uCallbackMessage = WM_TO_TRAY;
-	nid.hIcon = LoadIcon(maininstance, MAKEINTRESOURCE(IDI_ICON1));
-	wcscpy_s(nid.szTip, _T("数独"));
-	Shell_NotifyIcon(NIM_DELETE, &nid);
 }
 INT_PTR WINAPI dlgproc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -105,7 +75,7 @@ LRESULT CALLBACK wndproc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 			if (destroyicon && !minizehide)
 			{
 				destroyicon = false;
-				deleteicon(hwnd);
+				delete icon;
 			}
 		}
 		if (lparam == WM_RBUTTONDOWN)
@@ -130,13 +100,12 @@ LRESULT CALLBACK wndproc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 				if (destroyicon && !minizehide)
 				{
 					destroyicon = false;
-					deleteicon(hwnd);
+					delete icon;
 				}
 			}
 			if (xx == ID_CLCEXIT)
 			{
-				DeleteBitmaps();
-				deleteicon(hwnd);
+				DeleteResource();
 				PostQuitMessage(3);
 			}
 		}
@@ -209,7 +178,7 @@ LRESULT CALLBACK wndproc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 			}
 			break;
 		case ID_SOONHIDE:
-			showicon(hwnd);
+			icon = new ICON(hwnd);
 			windowhide = true;
 			ShowWindow(hwnd, SW_HIDE);
 			destroyicon = true;
@@ -217,13 +186,13 @@ LRESULT CALLBACK wndproc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 		case ID_HIDE:
 			if (CheckMenuItem(GetMenu(hwnd), ID_HIDE, MF_BYCOMMAND) == MF_UNCHECKED)
 			{
-				showicon(hwnd);
+				icon = new ICON(hwnd);
 				CheckMenuItem(GetMenu(hwnd), ID_HIDE, MF_BYCOMMAND | MF_CHECKED);
 				minizehide = true;
 			}
 			else
 			{
-				deleteicon(hwnd);
+				delete icon;
 				CheckMenuItem(GetMenu(hwnd), ID_HIDE, MF_BYCOMMAND | MF_UNCHECKED);
 				minizehide = false;
 			}
@@ -250,8 +219,7 @@ LRESULT CALLBACK wndproc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 			DialogBox(maininstance, MAKEINTRESOURCE(IDD_DLGABOUT), hwnd, dlgproc);
 			break;
 		case ID_EXIT:
-			DeleteBitmaps();
-			deleteicon(hwnd);
+			DeleteResource();
 			PostQuitMessage(2);
 			break;
 		default:
@@ -263,8 +231,7 @@ LRESULT CALLBACK wndproc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 	{
 		if (MessageBox(hwnd, _T("是否关闭"), _T("数独"), MB_YESNO | MB_ICONINFORMATION | MB_DEFBUTTON2) == 6)
 		{
-			DeleteBitmaps();
-			deleteicon(hwnd);
+			DeleteResource();
 			PostQuitMessage(1);
 		}
 		break;
