@@ -3,19 +3,16 @@
 static TCHAR tip[] = _T("windowclass");
 bool start = false, minizehide = false, windowhide = false, destroyicon = false,topmost=true;
 HINSTANCE maininstance;
-HBITMAP logo, helpb, which, sudokumenu9, sudokumenu6, sudokumenu4, sudokumenuchecked;
+HBITMAP sudokumenu9, sudokumenu6, sudokumenu4, sudokumenuchecked;
 HWND bmphwnd, windowwnd;
 BITMAPBUTTON* play, * help, * backstart, * player, * count;
 ICON* icon;
+BACKGROUND* BG;
 unsigned int mode;
-HBITMAP png;
 void InitWindow(HWND hwnd)
 {
-	which = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_WHICH));
-	logo = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_BITMAP1));
-	helpb = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_HELP));
-	bmphwnd = CreateWindow(WC_STATIC, NULL, SS_BITMAP | SS_CENTERIMAGE | WS_CHILD | WS_VISIBLE, 0, 0, 500, 500, hwnd, NULL, maininstance, NULL);
-	SendMessage(bmphwnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)logo);
+	BG = new BACKGROUND(hwnd);
+	BG->SetBitMap(IDB_BITMAP1, maininstance);
 	sudokumenuchecked = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_MENUCHECKED));
 	sudokumenu9 = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_9));
 	sudokumenu6 = LoadBitmap(maininstance, MAKEINTRESOURCE(IDB_6));
@@ -31,6 +28,7 @@ void InitWindow(HWND hwnd)
 	backstart = new BITMAPBUTTON(160, 270, IDB_3CHECKED, IDB_3NOCHECKED, hwnd, maininstance, false);
 	player = new BITMAPBUTTON(50, 120, IDB_4CHICKED, IDB_4NOCHICKED, hwnd, maininstance, false);
 	count = new BITMAPBUTTON(250, 120, IDB_5CHICKED, IDB_5NOCHICKED, hwnd, maininstance, false);
+
 }
 void DeleteResource(void)
 {
@@ -40,9 +38,6 @@ void DeleteResource(void)
 	delete player;
 	delete count;
 	delete icon;
-	DeleteBitmap(logo);
-	DeleteBitmap(help);
-	DeleteBitmap(which);
 	DeleteBitmap(sudokumenu9);
 	DeleteBitmap(sudokumenu6);
 	DeleteBitmap(sudokumenu4);
@@ -122,30 +117,29 @@ LRESULT CALLBACK wndproc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 		break;
 	case WM_LBUTTONDOWN:
 	{
-		UpdateWindow(hwnd);
 		if (play->CLC)
 		{
-			SendMessage(bmphwnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)which);
 			play->HIDE();
 			help->HIDE();
 			player->SHOW();
 			count->SHOW();
+			BG->SetBitMap(IDB_WHICH, maininstance);
 			break;
 		}
 		if (help->CLC)
 		{
-			SendMessage(bmphwnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)helpb);
 			play->HIDE();
 			help->HIDE();
 			backstart->SHOW();
+			BG->SetBitMap(IDB_HELP, maininstance);
 			break;
 		}
 		if (backstart->CLC)
 		{
-			SendMessage(bmphwnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)logo);
 			backstart->HIDE();
-			play->SHOW();
 			help->SHOW();
+			play->SHOW();
+			BG->SetBitMap(IDB_BITMAP1, maininstance);
 			break;
 		}
 		break;
@@ -244,6 +238,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR ncmdline,
 {
 	maininstance = hInstance;
 	WNDCLASSEX wc={0};
+	wc.style = CS_HREDRAW | CS_VREDRAW;
 	wc.cbSize = sizeof(wc);
 	wc.lpszClassName = tip;
 	wc.hbrBackground = CreateSolidBrush(RGB(0xFF, 0xFF, 0xFF));
@@ -262,7 +257,5 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR ncmdline,
 	{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
-		
 	}
-
 }

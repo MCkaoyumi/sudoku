@@ -11,14 +11,11 @@
 class BITMAPBUTTON
 {
 public:	
+	friend class BACKGROUND;
 	INT x;
 	INT y;
 	HWND BTNWND;
-	HWND ParentWindow;
 	bool CLC = false;
-	HBITMAP CLCBitmap;
-	HBITMAP UNCLCBitmap;
-	HINSTANCE hInstance;
 	bool Show;
 	BITMAPBUTTON(INT x, INT y, INT CLCBitmapID, INT UNCLCBitmapID, HWND hwnd, HINSTANCE hInstance, bool SHOW)
 	{
@@ -61,7 +58,6 @@ public:
 			CLC = false;
 		}
 		}
-		UpdateWindow(ParentWindow);
 	}
 	void HIDE(void)
 	{
@@ -75,11 +71,41 @@ public:
 		Show = true;
 		CLC = false;
 	}
+private:
+	HBITMAP CLCBitmap;
+	HBITMAP UNCLCBitmap;
+	HINSTANCE hInstance;
+	HWND ParentWindow;
+};
+class BACKGROUND
+{
+public:
+	void SetBitMap(INT bitmapID, HINSTANCE hInstance,INT BitmapW=500,INT BitmapH=500)
+	{
+		bitmap = LoadBitmap(hInstance, MAKEINTRESOURCE(bitmapID));
+		width = BitmapW;
+		height = BitmapH;
+		SendMessage(hStatic, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bitmap);
+		SetWindowPos(hStatic, HWND_DESKTOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+	}
+	BACKGROUND(HWND hwnd, INT width= 500, INT height = 500)
+	{
+		hStatic = CreateWindow(WC_STATIC, NULL, SS_BITMAP | WS_CHILD | WS_VISIBLE, 0, 0, NULL, NULL, hwnd, NULL, GetModuleHandle(NULL), NULL);
+	}
+	~BACKGROUND()
+	{
+		DeleteBitmap(bitmap);
+		DestroyWindow(hStatic);
+	}
+private:
+	INT width;
+	INT height;
+	HWND hStatic;
+	HBITMAP bitmap;
 };
 class ICON
 {
 public:
-	HICON icon;
 	ICON(HWND hwnd, HICON icon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON1)))
 	{
 		this->icon = icon;
@@ -97,5 +123,6 @@ public:
 		Shell_NotifyIcon(NIM_DELETE, &nid);
 	}
 private:
+	HICON icon;
 	NOTIFYICONDATA nid;
 };
