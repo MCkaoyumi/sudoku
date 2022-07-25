@@ -1,4 +1,5 @@
 #pragma once
+#include<thread>
 #include<Windows.h>
 #include<windowsx.h>
 #include<CommCtrl.h>
@@ -11,7 +12,6 @@
 class BITMAPBUTTON
 {
 public:	
-	friend class BACKGROUND;
 	INT x;
 	INT y;
 	HWND BTNWND;
@@ -36,7 +36,6 @@ public:
 		DeleteBitmap(CLCBitmap);
 		DeleteBitmap(UNCLCBitmap);
 	}
-
 	void CheckedButton(void)
 	{
 		if(Show)
@@ -49,7 +48,7 @@ public:
 		{
 			SendMessage(BTNWND, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)CLCBitmap);
 			if (!CLC)
-				PlaySound(MAKEINTRESOURCE(IDR_WAVE1),hInstance, SND_RESOURCE | SND_ASYNC);
+				PlaySound(MAKEINTRESOURCE(IDR_WAVE1), GetModuleHandle(NULL), SND_RESOURCE | SND_ASYNC);
 			CLC = true;
 		}
 		else
@@ -88,7 +87,11 @@ public:
 		SendMessage(hStatic, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bitmap);
 		SetWindowPos(hStatic, HWND_DESKTOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 	}
-	BACKGROUND(HWND hwnd, INT width= 500, INT height = 500)
+	void hide()
+	{
+		ShowWindow(hStatic, SW_HIDE);
+	}
+	BACKGROUND(HWND hwnd, INT width= 500, INT height = 500):width(width),height(height)
 	{
 		hStatic = CreateWindow(WC_STATIC, NULL, SS_BITMAP | WS_CHILD | WS_VISIBLE, 0, 0, NULL, NULL, hwnd, NULL, GetModuleHandle(NULL), NULL);
 	}

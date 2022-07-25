@@ -8,7 +8,7 @@ HWND bmphwnd, windowwnd;
 BITMAPBUTTON* play, * help, * backstart, * player, * count;
 ICON* icon;
 BACKGROUND* BG;
-unsigned int mode;
+unsigned int mode = 0;
 void InitWindow(HWND hwnd)
 {
 	BG = new BACKGROUND(hwnd);
@@ -26,8 +26,8 @@ void InitWindow(HWND hwnd)
 	play = new BITMAPBUTTON(160, 100, IDB_1CHECKED, IDB_1NOCHECKED, hwnd, maininstance, true);
 	help = new BITMAPBUTTON(160, 200, IDB_2CHECKED, IDB_2NOCHECKED, hwnd, maininstance, true);
 	backstart = new BITMAPBUTTON(160, 270, IDB_3CHECKED, IDB_3NOCHECKED, hwnd, maininstance, false);
-	player = new BITMAPBUTTON(50, 120, IDB_4CHICKED, IDB_4NOCHICKED, hwnd, maininstance, false);
-	count = new BITMAPBUTTON(250, 120, IDB_5CHICKED, IDB_5NOCHICKED, hwnd, maininstance, false);
+	player = new BITMAPBUTTON(50, 120, IDB_5CHICKED, IDB_5NOCHICKED, hwnd, maininstance, false);
+	count = new BITMAPBUTTON(250, 120, IDB_4CHICKED, IDB_4NOCHICKED, hwnd, maininstance, false);
 
 }
 void DeleteResource(void)
@@ -141,6 +141,28 @@ LRESULT CALLBACK wndproc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 			play->SHOW();
 			BG->SetBitMap(IDB_BITMAP1, maininstance);
 			break;
+		}
+		if (player->CLC)
+		{
+			if (mode != 0)
+			{
+				player->HIDE();
+				count->HIDE();
+				BG->hide();
+			}
+			else
+				MessageBox(hwnd, _T("请选择一个数独的模式,如\"九宫\"、\"六宫\"、\"四宫\""), _T("数独"), MB_OK | MB_ICONERROR);
+		}
+		if (count->CLC)
+		{
+			if (mode != 0)
+			{
+				count->HIDE();
+				player->HIDE();
+				BG->hide();
+			}
+			else
+				MessageBox(hwnd, _T("请选择一个数独的模式,如\"九宫\"、\"六宫\"、\"四宫\""), _T("数独"), MB_OK | MB_ICONERROR);
 		}
 		break;
 	}
